@@ -9,3 +9,11 @@ The following commands are permitted:
     LEFT
     RIGHT
     REPORT
+
+## Setup
+
+    pip install -e .
+
+## Development
+
+    pytest
