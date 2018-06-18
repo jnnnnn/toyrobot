@@ -1,10 +1,9 @@
-"""This class is a wrapper, because we need a way to get stdin commands to an instance of the Robot."""
+"""We need a way to get stdin commands to an instance of the Robot. This class does that."""
 
-import fileinput
 import logging
 import sys
 from .robot import Robot
-
+from .input import command
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
@@ -20,11 +19,11 @@ def main(args=None):
         if not line: 
             break # EOF
         try:
-            robot.Command(line)
+            command(line, robot)
         except Exception as e:
+            # spec says to ignore bad input lines
             logging.info(line)
             logging.info(e)
-            pass # ignore dodgy lines
 
 if __name__ == "__main__":
     main()

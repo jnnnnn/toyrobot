@@ -1,21 +1,23 @@
 """A class representing the toy robot."""
 
 import collections
+from enum import Enum
+
+DIR = Enum("Direction", "NORTH EAST SOUTH WEST")
 
 # We need to map direction names to the resulting movement translations
 # for example, a robot facing north will move 1 unit in the y direction
 # In order of turning right
-Movement = collections.namedtuple('Movement', ['x', 'y'])
-MOVEMENTS = collections.OrderedDict([
-    ('NORTH', Movement(x=0, y=1)),
-    ('EAST', Movement(x=1, y=0)),
-    ('SOUTH', Movement(x=0, y=-1)),
-    ('WEST', Movement(x=-1, y= 0)),
-])
-DIRECTIONS = list(MOVEMENTS.keys())
-TURN_RIGHT = { direction: DIRECTIONS[(i+1)%len(DIRECTIONS)] for i, direction in enumerate(DIRECTIONS)}
-TURN_LEFT  = { direction: DIRECTIONS[(i-1)%len(DIRECTIONS)] for i, direction in enumerate(DIRECTIONS)}
+Movement = collections.namedtuple('Movement', ['x', 'y', 'left', 'right'])
+MOVEMENTS = {
+    DIR.NORTH: Movement(x=0, y=1, left=DIR.WEST, right=DIR.EAST),
+    DIR.EAST: Movement(x=1, y=0, left=DIR.NORTH, right=DIR.SOUTH),
+    DIR.SOUTH: Movement(x=0, y=-1, left=DIR.EAST, right=DIR.WEST),
+    DIR.WEST: Movement(x=-1, y= 0, left=DIR.SOUTH, right=DIR.NORTH),
+}
 
+TABLE_COORD_MIN = 0
+TABLE_COORD_MAX = 4
 
 class Robot:
     """Keeps track of where a toy robot is."""
@@ -24,43 +26,29 @@ class Robot:
         self.y = None # y-coordinate on table, 0..4
         self.f = None # direction robot is facing
 
-    def _set(self, x, y, f):
-        if x >= 5 or x < 0:
+    def Place(self, x:int, y:int, f:str):
+        if x < TABLE_COORD_MIN or x > TABLE_COORD_MAX:
             raise ValueError('x out of bounds')
-        elif y >= 5 or y < 0:
+        elif y < TABLE_COORD_MIN or y > TABLE_COORD_MAX:
             raise ValueError('y out of bounds')
-        elif f not in MOVEMENTS:
-            raise ValueError('unknown direction')
+        elif f not in DIR.__members__:
+            raise ValueError('%s is not a valid direction' % f)
         self.x = x
         self.y = y
-        self.f = f
+        self.f = DIR[f]
 
-    def Command(self, command:str):
-        """Execute a command such as MOVE or REPORT."""
-        command = command.strip()
-        if command.startswith('PLACE'):
-            x, y, f = command.split('PLACE')[1].split(',')
-            x, y = int(x), int(y)
-            f = f.strip()
-            # parsing complete, update state
-            self._set(x, y, f)
-        # The remaining commands require that we are initialized
-        elif self.f:
-            if command == 'MOVE':
-                direction = MOVEMENTS[self.f]
-                self._set(
-                    x = self.x + direction.x,
-                    y = self.y + direction.y,
-                    f = self.f
-                )
-            elif command == 'LEFT':
-                self.f = TURN_LEFT[self.f]
-            elif command == 'RIGHT':
-                self.f = TURN_RIGHT[self.f]
-            elif command == 'REPORT':
-                print("{x},{y}: {f}".format(**self.__dict__))
-            else:
-                raise ValueError("Invalid command %s" % command)
-        else:
-            raise ValueError("Uninitialized.")
-        
+    def Move(self):
+        movement = MOVEMENTS[self.f]
+        self.Place(
+            x = self.x + movement.x,
+            y = self.y + movement.y,
+            f = self.f.name)
+
+    def Left(self):
+        self.f = MOVEMENTS[self.f].left
+
+    def Right(self):
+        self.f = MOVEMENTS[self.f].right
+
+    def Report(self):
+        print("{x},{y}: {f.name}".format(**self.__dict__))
