@@ -1,3 +1,5 @@
+"""This class is a wrapper, because we need a way to get stdin commands to an instance of the Robot."""
+
 import fileinput
 import logging
 import sys
@@ -8,7 +10,9 @@ def main(args=None):
         args = sys.argv[1:]
     if '-v' in args:
         logging.getLogger().setLevel(logging.INFO)
+
     robot = Robot()
+    
     # fileinput will loop through all the lines in the input specified as file names given in 
     # command-line arguments, or the standard input if no arguments are provided.
     while True:

@@ -2,6 +2,12 @@
 
 The application is a simulation of a toy robot moving on a square table top.
 
+## Usage
+
+After setup, run the command line program with the command
+
+    toyrobot
+
 The following commands are permitted:
 
     PLACE X,Y,F
@@ -10,13 +16,19 @@ The following commands are permitted:
     RIGHT
     REPORT
 
+The robot is constrained to move within the table (`X,Y ∈ [0..4]`)
+
 ## Setup
 
     pip install -e .
 
 ## Development
 
+To run tests, use:
+
     pytest
+
+For `stderr` logging of the problems with invalid commands, run with the `-v` switch.
 
 ## Bibliography
 
