@@ -55,5 +55,5 @@ class Robot:
             direction = Directions[self.f]
             self.f = direction.right
         elif command == 'REPORT':
-            print("{x},{y}: {f}".format(self))
+            print("{x},{y}: {f}".format(**self.__dict__))
             
