@@ -16,6 +16,14 @@ The following commands are permitted:
     RIGHT
     REPORT
 
+`F` is a direction, one of
+
+            NORTH
+        WEST     EAST
+            SOUTH
+
+The southwest corner of the tabletop is at `X,Y = 0,0`.
+
 The robot is constrained to move within the table (`X,Y ∈ [0..4]`)
 
 ## Setup
