@@ -28,15 +28,23 @@ The robot is constrained to move within the table (`X,Y ∈ [0..4]`)
 
 ## Setup
 
+Install Python 3.6+, clone this repository, and run this in the root folder:
+
     pip install -e .
 
 ## Development
 
 To run tests, use:
 
+    pip install pytest
     pytest
 
 For `stderr` logging of the problems with invalid commands, run with the `-v` switch.
+
+For a code coverage report, use:
+
+    pip install pytest-cov
+    pytest --cov=toyrobot --cov-report html:cov_html
 
 ## Bibliography
 
